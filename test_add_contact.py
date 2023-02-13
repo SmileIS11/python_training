@@ -17,20 +17,14 @@ class GroupCreationTest(unittest.TestCase):
 
     def test_add_contact(self):
         wd = self.wd
-        self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
-        self.open_contact_page(wd)
         self.create_contact(wd, Contact(name="user1", company="it", address="USA"))
-        self.return_to_home_page(wd)
         self.logout(wd)
 
     def test_add_empty_contact(self):
         wd = self.wd
-        self.open_home_page(wd)
         self.login(wd, username="admin", password="secret")
-        self.open_contact_page(wd)
         self.create_contact(wd, Contact(name="", company="", address=""))
-        self.return_to_home_page(wd)
         self.logout(wd)
 
     def logout(self, wd):
@@ -40,6 +34,7 @@ class GroupCreationTest(unittest.TestCase):
         wd.find_element(By.LINK_TEXT, "home").click()
 
     def create_contact(self, wd, contact):
+        self.open_contact_page(wd)
         # init group creation
         wd.find_element("name", "firstname").click()
         wd.find_element("name", "firstname").clear()
@@ -52,11 +47,13 @@ class GroupCreationTest(unittest.TestCase):
         wd.find_element("name", "address").send_keys(contact.address)
         # submit group creation
         wd.find_element("name", "submit").click()
+        self.return_to_home_page(wd)
 
     def open_contact_page(self, wd):
         wd.find_element(By.LINK_TEXT, "add new").click()
 
     def login(self, wd, username, password):
+        self.open_home_page(wd)
         wd.find_element("name", "user").click()
         wd.find_element("name", "user").clear()
         wd.find_element("name", "user").send_keys(username)
