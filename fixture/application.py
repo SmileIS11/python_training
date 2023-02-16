@@ -8,7 +8,7 @@ from selenium.webdriver.support.ui import Select
 class Application:
 
     def __init__(self):
-        s = Service('C:\\Users\\Igor\\PycharmProjects\\python_training\\drivers\\chromedriver.exe')
+        s = Service('/drivers/chromedriver.exe')
         self.wd = webdriver.Chrome(service=s)
         self.wd.implicitly_wait(60)
 
