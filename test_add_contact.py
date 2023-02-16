@@ -1,6 +1,6 @@
 import pytest
 from contact import Contact
-from application_contact import Application
+from application import Application
 
 @pytest.fixture
 def app(request):

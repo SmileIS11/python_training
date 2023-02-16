@@ -31,6 +31,9 @@ class Application:
         wd = self.wd
         wd.find_element(By.LINK_TEXT, "groups").click()
 
+    def open_contact_page(self):
+        wd = self.wd
+        wd.find_element(By.LINK_TEXT, "add new").click()
 
     def create_group(self, group):
         wd = self.wd
@@ -51,10 +54,32 @@ class Application:
         wd.find_element("name", "submit").click()
         self.return_to_groups_page()
 
+    def create_contact(self, contact):
+        wd = self.wd
+        self.open_contact_page()
+        # init group creation
+        wd.find_element("name", "firstname").click()
+        wd.find_element("name", "firstname").clear()
+        wd.find_element("name", "firstname").send_keys(contact.name)
+        wd.find_element("name", "company").click()
+        wd.find_element("name", "company").clear()
+        wd.find_element("name", "company").send_keys(contact.company)
+        wd.find_element("name", "address").click()
+        wd.find_element("name", "address").clear()
+        wd.find_element("name", "address").send_keys(contact.address)
+        # submit group creation
+        wd.find_element("name", "submit").click()
+        self.return_to_home_page()
+
+
     def return_to_groups_page(self):
         wd = self.wd
         wd.find_element(By.LINK_TEXT, "groups").click()
 
+
+    def return_to_home_page(self):
+        wd = self.wd
+        wd.find_element(By.LINK_TEXT, "home").click()
 
     def logout(self):
         wd = self.wd
