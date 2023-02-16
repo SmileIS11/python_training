@@ -1,83 +1,20 @@
-# -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
+import pytest
 from contact import Contact
-import unittest, time, re
+from application_contact import Application
 
-class GroupCreationTest(unittest.TestCase):
-    def setUp(self):
-        s = Service('C:\\Users\\Igor\\PycharmProjects\\python_training\\drivers\\chromedriver.exe')
-        self.wd = webdriver.Chrome(service=s)
-        self.wd.implicitly_wait(60)
+@pytest.fixture
+def app(request):
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)
+    return fixture
 
-    def test_add_contact(self):
-        wd = self.wd
-        self.login(wd, username="admin", password="secret")
-        self.create_contact(wd, Contact(name="user1", company="it", address="USA"))
-        self.logout(wd)
+def test_add_contact(app):
+    app.login(username="admin", password="secret")
+    app.create_contact(Contact(name="user1", company="it", address="USA"))
+    app.logout()
 
-    def test_add_empty_contact(self):
-        wd = self.wd
-        self.login(wd, username="admin", password="secret")
-        self.create_contact(wd, Contact(name="", company="", address=""))
-        self.logout(wd)
+def test_add_empty_contact(app):
+    app.login(username="admin", password="secret")
+    app.create_contact(Contact(name="", company="", address=""))
+    app.logout()
 
-    def logout(self, wd):
-        wd.find_element(By.LINK_TEXT, "Logout").click()
-
-    def return_to_home_page(self, wd):
-        wd.find_element(By.LINK_TEXT, "home").click()
-
-    def create_contact(self, wd, contact):
-        self.open_contact_page(wd)
-        # init group creation
-        wd.find_element("name", "firstname").click()
-        wd.find_element("name", "firstname").clear()
-        wd.find_element("name", "firstname").send_keys(contact.name)
-        wd.find_element("name", "company").click()
-        wd.find_element("name", "company").clear()
-        wd.find_element("name", "company").send_keys(contact.company)
-        wd.find_element("name", "address").click()
-        wd.find_element("name", "address").clear()
-        wd.find_element("name", "address").send_keys(contact.address)
-        # submit group creation
-        wd.find_element("name", "submit").click()
-        self.return_to_home_page(wd)
-
-    def open_contact_page(self, wd):
-        wd.find_element(By.LINK_TEXT, "add new").click()
-
-    def login(self, wd, username, password):
-        self.open_home_page(wd)
-        wd.find_element("name", "user").click()
-        wd.find_element("name", "user").clear()
-        wd.find_element("name", "user").send_keys(username)
-        wd.find_element("name", "pass").clear()
-        wd.find_element("name", "pass").send_keys(password)
-        wd.find_element("id", "LoginForm").submit()
-
-    def open_home_page(self, wd):
-        wd.get("http://localhost:8080/addressbook/")
-
-    def is_element_present(self, how, what):
-        try: self.wd.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-
-    def is_alert_present(self):
-        try: self.wd.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-
-
-    def tearDown(self):
-        self.wd.quit()
-
-
-if __name__ == "__main__":
-    unittest.main()
