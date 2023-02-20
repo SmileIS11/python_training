@@ -13,26 +13,45 @@ class ContactHelper:
         wd = self.app.wd
         self.open_contact_page()
         # init group creation
-        wd.find_element("name", "firstname").click()
-        wd.find_element("name", "firstname").clear()
-        wd.find_element("name", "firstname").send_keys(contact.name)
-        wd.find_element("name", "company").click()
-        wd.find_element("name", "company").clear()
-        wd.find_element("name", "company").send_keys(contact.company)
-        wd.find_element("name", "address").click()
-        wd.find_element("name", "address").clear()
-        wd.find_element("name", "address").send_keys(contact.address)
+        self.fill_contact_form(contact)
         # submit group creation
         wd.find_element("name", "submit").click()
         self.return_to_home_page()
 
+    def modify_first_contact(self, new_contact_data):
+        wd = self.app.wd
+        wd.find_element(By.XPATH, "//img[@alt='Edit']").click()
+        # init group creation
+        self.fill_contact_form(new_contact_data)
+        # submit group creation
+        wd.find_element("name", "update").click()
+        self.return_to_home_page()
+
+
+    def fill_contact_form(self, contact):
+        self.change_field_value("firstname", contact.name)
+        self.change_field_value("company", contact.company)
+        self.change_field_value("address", contact.address)
+
+    def change_field_value(self, field_name, text):
+        wd = self.app.wd
+        if text is not None:
+            wd.find_element("name", field_name).click()
+            wd.find_element("name", field_name).clear()
+            wd.find_element("name", field_name).send_keys(text)
+
     def delete_first_contact(self):
+        wd = self.app.wd
+        self.select_first_contact()
+        # delete first group
+        wd.find_element(By.XPATH, "//input[@value='Delete']").click()
+        wd.switch_to.alert.accept()
+        self.return_to_home_page()
+
+    def select_first_contact(self):
         wd = self.app.wd
         # select first checkbox
         wd.find_element("name", "selected[]").click()
-        # delete first group
-        wd.find_element(By.XPATH, '//*[@id="content"]/form[2]/div[2]').click()
-        wd.switch_to.alert.accept()
 
 
     def return_to_home_page(self):
