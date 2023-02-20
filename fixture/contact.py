@@ -12,18 +12,18 @@ class ContactHelper:
     def create(self, contact):
         wd = self.app.wd
         self.open_contact_page()
-        # init group creation
+        # init contact creation
         self.fill_contact_form(contact)
-        # submit group creation
+        # submit contact creation
         wd.find_element("name", "submit").click()
         self.return_to_home_page()
 
     def modify_first_contact(self, new_contact_data):
         wd = self.app.wd
         wd.find_element(By.XPATH, "//img[@alt='Edit']").click()
-        # init group creation
+        # init contact creation
         self.fill_contact_form(new_contact_data)
-        # submit group creation
+        # submit contact creation
         wd.find_element("name", "update").click()
         self.return_to_home_page()
 
@@ -43,7 +43,7 @@ class ContactHelper:
     def delete_first_contact(self):
         wd = self.app.wd
         self.select_first_contact()
-        # delete first group
+        # delete first contact
         wd.find_element(By.XPATH, "//input[@value='Delete']").click()
         wd.switch_to.alert.accept()
         self.return_to_home_page()
