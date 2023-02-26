@@ -4,14 +4,14 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
-    def open_contact_page(self):
+    def open_add_new_page(self):
         wd = self.app.wd
         wd.find_element(By.LINK_TEXT, "add new").click()
 
 
     def create(self, contact):
         wd = self.app.wd
-        self.open_contact_page()
+        self.open_add_new_page()
         # init contact creation
         self.fill_contact_form(contact)
         # submit contact creation
